@@ -1,0 +1,274 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "StringTemplate",
+	"patterns": [
+		{
+			"include": "#statement-delimiters"
+		},
+		{
+			"include": "#statement-import"
+		},
+		{
+			"include": "#template-declaration"
+		},
+		{
+			"include": "#template-body"
+		},
+		{
+			"include": "#dictionary-declaration"
+		},
+		{
+			"include": "#dictionary-body"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"name": "keyword.control.stringtemplate",
+			"match": "\\b(if|elseif|else|endif|null|separator|true|false)\\b"
+		},
+		"escape": {
+			"name": "constant.character.escape.stringtemplate",
+			"match": "\\\\\\$"
+		},
+		"comment": {
+			"name": "comment.block.stringtemplate",
+			"begin": "(?<!\\\\)\\$!",
+			"end": "!(?<!\\\\)\\$"
+		},
+		"strings": {
+			"name": "string.quoted.double.stringtemplate",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.stringtemplate",
+					"match": "\\\\."
+				}
+			]
+		},
+		"statement-delimiters": {
+			"name": "meta.statement.stringtemplate",
+			"match": "^(delimiters)\\s+(\"[^\"]+\")\\s*,\\s*(\"[^\"]+\")",
+			"captures": {
+				"1": {
+					"name": "keyword.control.stringtemplate"
+				},
+				"2": {
+					"name": "string.quoted.double.stringtemplate"
+				},
+				"3": {
+					"name": "string.quoted.double.stringtemplate"
+				}
+			}
+		},
+		"statement-import": {
+			"name": "meta.statement.stringtemplate",
+			"match": "^(import)\\s+(\"[^\"]+\")",
+			"captures": {
+				"1": {
+					"name": "keyword.control.stringtemplate"
+				},
+				"2": {
+					"name": "entity.name.type.stringtemplate"
+				}
+			}
+		},
+		"dictionary-declaration": {
+			"name": "meta.template.stringtemplate",
+			"match": "^([a-zA-Z_][a-zA-Z0-9_]*)\\s*::=",
+			"captures": {
+				"1": {
+					"name": "entity.name.function.stringtemplate"
+				}
+			}
+		},
+		"dictionary-body": {
+			"name": "meta.template.stringtemplate",
+			"begin": "\\[",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				}
+			},
+			"end": "\\]",
+			"endCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				}
+			},
+			"patterns": [
+				{
+					"match": "(default|\"[^\"]+\")\\s*:\\s*(true|false|\"[^\"]+\"|{[^}]+}),?",
+					"captures": {
+						"1": {
+							"name": "entity.other.attribute-name.stringtemplate",
+							"patterns": [
+								{
+									"include": "#dictionary-keywords"
+								}
+							]
+						},
+						"2": {
+							"name": "string.quoted.stringtemplate",
+							"patterns": [
+								{
+									"include": "#template-anonymous"
+								},
+								{
+									"include": "#keywords"
+								},
+								{
+									"include": "#strings"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"dictionary-keywords": {
+			"name": "keyword.control.stringtemplate",
+			"match": "\\b(default)\\b"
+		},
+		"template-declaration": {
+			"name": "meta.template.stringtemplate",
+			"begin": "^([a-zA-Z_][a-zA-Z0-9_]*)\\(",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.function.stringtemplate"
+				}
+			},
+			"end": "\\)\\s*(::=)",
+			"patterns": [
+				{
+					"include": "#template-parameters"
+				},
+				{
+					"include": "#strings"
+				}
+			]
+		},
+		"template-parameters": {
+			"name": "variable.parameter.stringtemplate",
+			"match": "\\w"
+		},
+		"template-body": {
+			"name": "string.stringtemplate",
+			"begin": "<<|<%",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				}
+			},
+			"end": ">>|%>",
+			"endCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#escape"
+				},
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#placeholder"
+				}
+			]
+		},
+		"template-anonymous": {
+			"name": "string.quoted.stringtemplate",
+			"begin": "{(?:\\s*(\\b([a-zA-Z_]+)\\b)\\s*\\|)?",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				},
+				"1": {
+					"patterns": [
+						{
+							"include": "#template-parameters"
+						}
+					]
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#escape"
+				},
+				{
+					"include": "#placeholder"
+				}
+			]
+		},
+		"template-expression": {
+			"name": "meta.function.expression.stringtemplate",
+			"begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\(",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.function.stringtemplate"
+				}
+			},
+			"end": "\\)",
+			"patterns": [
+				{
+					"include": "#template-expression-parameters"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#template-anonymous"
+				}
+			]
+		},
+		"template-expression-parameters": {
+			"name": "variable.parameter.stringtemplate",
+			"match": "\\w"
+		},
+		"variables": {
+			"name": "variable.stringtemplate",
+			"match": "\\b([a-zA-Z_]+)\\b"
+		},
+		"placeholder": {
+			"name": "keyword.operator.stringtemplate",
+			"begin": "(?<!\\\\|!)\\$(?!!)",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				}
+			},
+			"end": "(?<!\\\\)\\$",
+			"endCaptures": {
+				"0": {
+					"name": "keyword.operator.stringtemplate"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#template-expression"
+				},
+				{
+					"include": "#template-anonymous"
+				},
+				{
+					"include": "#variables"
+				},
+				{
+					"include": "#strings"
+				}
+			]
+		}
+	},
+	"scopeName": "source.stringtemplate"
+}

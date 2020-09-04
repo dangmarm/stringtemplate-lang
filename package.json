@@ -1,0 +1,36 @@
+{
+    "name": "stringtemplate-lang",
+    "displayName": "StringTemplate Lang",
+    "description": "Syntax highlighting for StringTemplate language",
+    "version": "0.0.1",
+    "publisher": "dangmarm",
+    "engines": {
+        "vscode": "^1.48.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "stringtemplate",
+                "aliases": [
+                    "StringTemplate",
+                    "stringtemplate"
+                ],
+                "extensions": [
+                    ".st",
+                    ".stg"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "stringtemplate",
+                "scopeName": "source.stringtemplate",
+                "path": "./syntaxes/stringtemplate.tmLanguage.json"
+            }
+        ]
+    }
+}

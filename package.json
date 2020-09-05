@@ -19,7 +19,6 @@
                     "stringtemplate"
                 ],
                 "extensions": [
-                    ".st",
                     ".stg"
                 ],
                 "configuration": "./language-configuration.json"

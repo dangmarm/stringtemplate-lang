@@ -2,6 +2,7 @@
     "name": "stringtemplate-lang",
     "displayName": "StringTemplate Lang",
     "description": "Syntax highlighting for StringTemplate language",
+    "icon": "images/st-logo.png",
     "version": "0.0.1",
     "publisher": "dangmarm",
     "engines": {

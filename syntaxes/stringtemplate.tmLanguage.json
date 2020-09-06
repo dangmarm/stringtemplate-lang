@@ -28,7 +28,15 @@
 		},
 		"escape": {
 			"name": "constant.character.escape.stringtemplate",
-			"match": "\\\\\\$"
+			"match": "(\\\\)(\\$)",
+			"captures": {
+				"1": {
+					"name": "keyword.operator.stringtemplate"
+				},
+				"2": {
+					"name": "string.quoted.double.stringtemplate"
+				}
+			}
 		},
 		"comment": {
 			"name": "comment.block.stringtemplate",

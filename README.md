@@ -28,7 +28,7 @@ code --install-extension .\stringtemplate-lang-0.0.1.vsix
 
 <!-- LIMITATIONS -->
 ## Limitations
-At this moment it only supports templates that use '$' as a delimiter
+At this moment it only supports templates that use '$' as a delimiter.
 
 <!-- LICENSE -->
 ## License

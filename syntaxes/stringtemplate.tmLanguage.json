@@ -24,7 +24,19 @@
 	"repository": {
 		"keywords": {
 			"name": "keyword.control.stringtemplate",
-			"match": "\\b(if|elseif|else|endif|null|separator|true|false)\\b"
+			"match": "\\b(if|elseif|else|endif|null|separator)\\b"
+		},
+		"constants": {
+			"name": "keyword.control.stringtemplate",
+			"match": "\\b(true|false)|(i|i0)\\b",
+			"captures": {
+				"1": {
+					"name": "constant.language.stringtemplate"
+				},
+				"2": {
+					"name": "variable.language.stringtemplate"
+				}
+			}
 		},
 		"escape": {
 			"name": "constant.character.escape.stringtemplate",
@@ -124,6 +136,9 @@
 								},
 								{
 									"include": "#keywords"
+								},
+								{
+									"include": "#constants"
 								},
 								{
 									"include": "#strings"
@@ -265,6 +280,9 @@
 			"patterns": [
 				{
 					"include": "#keywords"
+				},
+				{
+					"include": "#constants"
 				},
 				{
 					"include": "#template-expression"

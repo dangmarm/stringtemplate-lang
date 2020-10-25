@@ -26,7 +26,11 @@ vsce package
 ```sh
 code --install-extension .\stringtemplate-lang-0.0.1.vsix
 ```
-
+## Featrues
+- Syntax highlight
+- Templates folding
+- Shortcut to comment code
+- Indent decorator to if ... endif code.
 <!-- LIMITATIONS -->
 ## Limitations
 At this moment it only supports templates that use '$' as a delimiter.

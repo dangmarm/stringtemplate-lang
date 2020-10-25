@@ -118,7 +118,7 @@
 			},
 			"patterns": [
 				{
-					"match": "(default|\"[^\"]+\")\\s*:\\s*(true|false|\"[^\"]+\"|{[^}]+}),?",
+					"match": "(default|\"[^\"]*\")\\s*:\\s*(true|false|\"[^\"]+\"|{[^}]+}),?",
 					"captures": {
 						"1": {
 							"name": "entity.other.attribute-name.stringtemplate",

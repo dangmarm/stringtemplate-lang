@@ -26,7 +26,7 @@ vsce package
 ```sh
 code --install-extension .\stringtemplate-lang-0.0.1.vsix
 ```
-## Featrues
+## Features
 - Syntax highlight
 - Templates folding
 - Shortcut to comment code

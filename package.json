@@ -5,6 +5,9 @@
     "icon": "images/st-logo.png",
     "version": "0.0.1",
     "publisher": "dangmarm",
+    "repository": {
+        "url": "https://github.com/dangmarm/stringtemplate-lang"
+    },
     "engines": {
         "vscode": "^1.48.0"
     },

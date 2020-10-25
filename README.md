@@ -4,15 +4,16 @@ This project is a Visual Studio Code extension for [StringTempalte v4](https://w
 
 <!-- GETTING STARTED -->
 ## Getting Started
-For now the extension is not available in the [VSCode Marketplace](https://marketplace.visualstudio.com/VSCode) so it must be installed manually.
+You can install the extension from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=dangmarm.stringtemplate-lang) or manually by following the steps below.
 
-### Prerequisites
+### Manual installation
+#### Prerequisites
 * The Visual Studio Code Extension Manager
 ```sh
 npm install -g vsce
 ```
 
-### Installation
+#### Installation
 * Clone this project
 ```sh
 git clone https://github.com/dangmarm/stringtemplate-lang.git

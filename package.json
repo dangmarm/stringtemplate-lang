@@ -3,7 +3,7 @@
     "displayName": "StringTemplate Lang",
     "description": "Syntax highlighting for StringTemplate language",
     "icon": "images/st-logo.png",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "dangmarm",
     "repository": {
         "url": "https://github.com/dangmarm/stringtemplate-lang"

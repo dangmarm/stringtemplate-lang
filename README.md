@@ -1,6 +1,6 @@
 ## About The Project
 
-This project is a Visual Studio Code extension for [StringTempalte v4](https://www.stringtemplate.org) language syntax highlighting.
+This project is a Visual Studio Code extension for [StringTempalte v4](https://www.stringtemplate.org) language.
 
 ## Getting Started
 

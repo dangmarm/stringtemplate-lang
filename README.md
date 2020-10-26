@@ -41,7 +41,7 @@ code --install-extension .\stringtemplate-lang-0.0.1.vsix
 - Syntax highlight
 - Templates folding
 - Shortcut to comment code
-- Indent decorator to if ... endif code
+- Indent decorator to if ... endif code (does not modify the source code)
 
 ## Preview
 Plain stg | Formatted stg

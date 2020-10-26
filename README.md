@@ -43,7 +43,7 @@ code --install-extension .\stringtemplate-lang-0.0.1.vsix
 - Shortcut to comment code
 - Indent decorator to if ... endif code (does not modify the source code)
 
-## Preview
+### Preview
 Plain stg | Formatted stg
 :-:|:-:
 ![STG plain text](./doc/stg_plain.png) | ![STG formatted text](./doc/stg_formatted.png)

@@ -44,7 +44,7 @@ code --install-extension .\stringtemplate-lang-0.0.1.vsix
 - Indent decorator to if ... endif code
 
 ## Preview
-Plain text | Formatted text
+Plain stg | Formatted stg
 :-:|:-:
 ![STG plain text](./doc/stg_plain.png) | ![STG formatted text](./doc/stg_formatted.png)
 

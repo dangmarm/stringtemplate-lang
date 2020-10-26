@@ -42,6 +42,7 @@ code --install-extension .\stringtemplate-lang-0.0.1.vsix
 - Templates folding
 - Shortcut to comment code
 - Indent decorator to if ... endif code.
+
   ![STG plain text](doc/stg_plain.png)
   ![STG formatted text](doc/stg_formatted.png)
 

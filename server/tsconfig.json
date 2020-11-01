@@ -1,14 +1,16 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
         "target": "es2019",
         "lib": [
             "ES2019"
         ],
-        "outDir": "out",
+        "module": "commonjs",
+        "moduleResolution": "node",
         "sourceMap": true,
         "strict": true,
-        "rootDir": "src"
+        "outDir": "out",
+        "rootDir": "src",
+        "composite": true
     },
     "include": [
         "src"
@@ -16,10 +18,5 @@
     "exclude": [
         "node_modules",
         ".vscode-test"
-    ],
-    "references": [
-        {
-            "path": "./server"
-        }
     ]
 }

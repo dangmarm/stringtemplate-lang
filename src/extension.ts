@@ -1,144 +1,72 @@
-import * as vscode from 'vscode';
+import * as path from "path";
 
-export function activate(context: vscode.ExtensionContext) {
-	let timeout: NodeJS.Timer | undefined = undefined;
-	let activeEditor = vscode.window.activeTextEditor;
-	let cacheDecorators = new Map();
-	
-	function updateDecorations() {
-		if (!activeEditor || activeEditor.document.languageId !== 'stringtemplate') {
-			return;
-		}
-		const regEx = /(?:\$(?:if\s*\([^$]+|elseif\s*\([^$]+|else|endif)\$)|^ *(?:>>|%>) *$/gm;
-		const text = activeEditor.document.getText();
-		let match;
-		let level = 0;
-		let startLine = [], endLine = [];
-		let indentLines = new Map();
-		while ((match = regEx.exec(text))) {
-			const conditionalPosition = activeEditor.document.positionAt(match.index);
-			if (match[0].startsWith("$if")) {
-				level++;
-				startLine[level] = conditionalPosition.line;
-			} else if (match[0].startsWith("$else")) {
-				if (level > 0) {
-					endLine[level] = conditionalPosition.line;
-					for (let i = startLine[level] + 1; i < endLine[level]; i++) {
-						if (indentLines.has(i)) {
-							indentLines.set(i, Math.max(level, indentLines.get(i)));
-						} else {
-							indentLines.set(i, level);
-						}
-					}	
-				} else if (level === 0) {
-					level++;
-				}
-				startLine[level] = conditionalPosition.line;
-			} else if (match[0].startsWith("$endif")) {
-				if (level > 0) {
-					endLine[level] = conditionalPosition.line;
-					for (let i = startLine[level] + 1; i < endLine[level]; i++) {
-						if (indentLines.has(i)) {
-							indentLines.set(i, Math.max(level, indentLines.get(i)));
-						} else {
-							indentLines.set(i, level);
-						}
-					}
-					level--;
-				}
-			} else if (match[0].startsWith(">>") || match[0].startsWith("%>")) {
-				for(let l=level; l>0; l--) {
-					endLine[l] = conditionalPosition.line;
-					for (let i = startLine[l] + 1; i < endLine[l]; i++) {
-						if (indentLines.has(i)) {
-							indentLines.set(i, Math.max(l, indentLines.get(i)));
-						} else {
-							indentLines.set(i, l);
-						}
-					}
-				}
-				level = 0;
-			}
-		}
+import { ExtensionContext, workspace } from "vscode";
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  ServerOptions,
+  TransportKind,
+} from "vscode-languageclient";
 
-		let decorators = new Map();
-		indentLines.forEach((indentLevel, lineNumber) => {
-			let decorator: {decoratorType: vscode.TextEditorDecorationType, conditionalCodeLines: {range: vscode.Range}[]};
+import { Decorations } from './decorations';
 
-			if (decorators.has(indentLevel)) {
-				decorator = decorators.get(indentLevel);
-			} else {
-				decorator = {
-					decoratorType: getDecorator(indentLevel),
-					conditionalCodeLines: []
-				};
-				decorators.set(indentLevel, decorator);
-			}
+let client: LanguageClient;
+let decorations: Decorations;
 
-			if (activeEditor) {
-				const line = activeEditor.document.lineAt(lineNumber)
-				if (activeEditor && !line.isEmptyOrWhitespace) {
-					const indexStart = line.firstNonWhitespaceCharacterIndex;
-					const indexEnd = line.range.end.character;
+export function activate(context: ExtensionContext) {
+	startDecorations(context);
+	startClient(context);
+}
 
-					decorator.conditionalCodeLines.push({range: new vscode.Range(new vscode.Position(lineNumber, indexStart), new vscode.Position(lineNumber, indexEnd))})	
-				}	
-			}
-		});
-
-		
-		decorators.forEach((value) => {
-			activeEditor?.setDecorations(value.decoratorType, value.conditionalCodeLines);
-		});
+export function deactivate(): Thenable<void> | undefined {
+	if (!client) {
+		return undefined;
 	}
+	return client.stop();
+}
 
-	function getDecorator(level: number): vscode.TextEditorDecorationType {
-		if (!cacheDecorators.has(level)) {
-			cacheDecorators.set(
-				level, 
-				vscode.window.createTextEditorDecorationType({
-					dark: {
-						before: {
-							contentText: ''.padStart(level * 4, '·'),
-							color:'rgb(64,64,64)'
-						}	
-					},
-					light: {
-						before: {
-							contentText: ''.padStart(level * 4, '·'),
-							color:'rgb(248,248,248)'
-						}	
-					}
-				})
-			);
-		}
+function startDecorations(context: ExtensionContext) {
+	decorations = new Decorations(context);
+}
 
-		return cacheDecorators.get(level);
-	}
+function startClient(context: ExtensionContext) {
+  // The server is implemented in node
+  let serverModule = context.asAbsolutePath(
+    path.join("server", "out", "server.js")
+  );
+  // The debug options for the server
+  // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
+  let debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
 
-	function triggerUpdateDecorations() {
-		if (timeout) {
-			clearTimeout(timeout);
-			timeout = undefined;
-		}
-		timeout = setTimeout(updateDecorations, 500);
-	}
+  // If the extension is launched in debug mode then the debug server options are used
+  // Otherwise the run options are used
+  let serverOptions: ServerOptions = {
+    run: { module: serverModule, transport: TransportKind.ipc },
+    debug: {
+      module: serverModule,
+      transport: TransportKind.ipc,
+      options: debugOptions,
+    },
+  };
 
-	if (activeEditor) {
-		triggerUpdateDecorations();
-	}
+  // Options to control the language client
+  let clientOptions: LanguageClientOptions = {
+    // Register the server for plain text documents
+    documentSelector: [{ scheme: "file", language: "stringtemplate" }],
+    synchronize: {
+      // Notify the server about file changes to '.clientrc files contained in the workspace
+      fileEvents: workspace.createFileSystemWatcher("**/.clientrc"),
+    },
+  };
 
-	vscode.window.onDidChangeActiveTextEditor(editor => {
-		activeEditor = editor;
-		if (editor) {
-			triggerUpdateDecorations();
-		}
-	}, null, context.subscriptions);
+  // Create the language client and start the client.
+  client = new LanguageClient(
+    "stringtemplateServer",
+    "StringTemplate Server",
+    serverOptions,
+    clientOptions
+  );
 
-	vscode.workspace.onDidChangeTextDocument(event => {
-		if (activeEditor && event.document === activeEditor.document) {
-			triggerUpdateDecorations();
-		}
-	}, null, context.subscriptions);
-
+  // Start the client. This will also launch the server
+  client.start();
 }

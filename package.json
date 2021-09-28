@@ -74,7 +74,7 @@
         "compile": "tsc -b ./",
         "lint": "eslint . --ext .ts,.tsx",
         "watch": "tsc -watch -p ./",
-        "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+        "postinstall": "cd server && npm install && cd .."
     },
     "dependencies": {
         "vscode-languageclient": "^6.1.3"
